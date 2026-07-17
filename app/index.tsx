@@ -1,97 +1,128 @@
 import '@/global.css';
-import { View, Text, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
+import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
-import { Button } from '@/components/Button';
-import { VehicleCard } from '@/components/VehicleCard';
 
-export default function WelcomeScreen() {
+export default function PreLoader() {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.replace('/welcome');
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.background }}>
-      <ScrollView
-        contentContainerClassName="flex-grow px-6"
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="flex-1 justify-center items-center pt-12 pb-6">
-          <View className="w-24 h-24 rounded-3xl items-center justify-center mb-6"
-            style={{ backgroundColor: Colors.primary + '12' }}
-          >
-            <Ionicons name="bus" size={48} color={Colors.primary} />
-          </View>
+    <View
+      className="flex-1 items-center justify-between"
+      style={{ backgroundColor: Colors.deepForest, paddingTop: 80, paddingBottom: 40 }}
+    >
+      {/* Decorative circles */}
+      <View className="absolute top-0 left-0 right-0" style={{ height: 300 }}>
+        <View
+          className="absolute rounded-full"
+          style={{
+            width: 200,
+            height: 200,
+            top: -60,
+            right: -40,
+            backgroundColor: Colors.pineShade,
+            opacity: 0.6,
+          }}
+        />
+        <View
+          className="absolute rounded-full"
+          style={{
+            width: 120,
+            height: 120,
+            top: 40,
+            left: -30,
+            backgroundColor: Colors.emeraldDepth,
+            opacity: 0.4,
+          }}
+        />
+      </View>
 
-          <Text className="text-4xl font-extrabold mb-2" style={{ color: Colors.text }}>
-            SAKAY
-          </Text>
-          <Text className="text-base text-center mb-8" style={{ color: Colors.textSecondary }}>
-            Your ride, your way. Book jeepneys, buses,{'\n'}motorcycles, and tricycles in one tap.
-          </Text>
-
-          <View className="flex-row justify-center mb-8">
-            <VehicleCard name="Jeepney" icon="bus" color={Colors.botanicalGreen} />
-            <VehicleCard name="Bus" icon="train" color={Colors.softFern} />
-            <VehicleCard name="Motor" icon="bicycle" color={Colors.mossGreen} />
-            <VehicleCard name="Tricycle" icon="car-sport" color={Colors.sageLeaf} />
-          </View>
-
-          <View className="w-full space-y-3">
-            <Button
-              title="Get Started"
-              onPress={() => router.push('/(auth)/signup')}
-              variant="primary"
-              size="lg"
-            />
-            <Button
-              title="I already have an account"
-              onPress={() => router.push('/(auth)/login')}
-              variant="outline"
-              size="lg"
-            />
-          </View>
+      {/* Center content */}
+      <View className="flex-1 items-center justify-center">
+        {/* Logo container */}
+        <View
+          className="w-28 h-28 rounded-3xl items-center justify-center mb-8"
+          style={{
+            backgroundColor: Colors.botanicalGreen + '20',
+            borderWidth: 2,
+            borderColor: Colors.botanicalGreen + '40',
+          }}
+        >
+          <Ionicons name="bus" size={56} color={Colors.botanicalGreen} />
         </View>
 
-        <View className="flex-row items-center justify-center pb-6 pt-4">
-          <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
-          <Text className="mx-4 text-xs" style={{ color: Colors.textTertiary }}>
-            Safe &bull; Fast &bull; Affordable
-          </Text>
-          <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
-        </View>
+        {/* App name */}
+        <Text
+          className="font-extrabold"
+          style={{
+            fontSize: 42,
+            color: Colors.pistachioCream,
+            letterSpacing: 4,
+          }}
+        >
+          SakayNE
+        </Text>
 
-        <View className="flex-row justify-center gap-6 pb-8">
-          <View className="items-center">
-            <View className="w-10 h-10 rounded-full items-center justify-center mb-1"
-              style={{ backgroundColor: Colors.success + '15' }}
-            >
-              <Ionicons name="shield-checkmark" size={18} color={Colors.success} />
-            </View>
-            <Text className="text-[10px] font-medium" style={{ color: Colors.textSecondary }}>
-              Safe
-            </Text>
-          </View>
-          <View className="items-center">
-            <View className="w-10 h-10 rounded-full items-center justify-center mb-1"
-              style={{ backgroundColor: Colors.primary + '15' }}
-            >
-              <Ionicons name="speedometer" size={18} color={Colors.primary} />
-            </View>
-            <Text className="text-[10px] font-medium" style={{ color: Colors.textSecondary }}>
-              Fast
-            </Text>
-          </View>
-          <View className="items-center">
-            <View className="w-10 h-10 rounded-full items-center justify-center mb-1"
-              style={{ backgroundColor: Colors.secondary + '25' }}
-            >
-              <Ionicons name="pricetag" size={18} color={Colors.secondaryDark} />
-            </View>
-            <Text className="text-[10px] font-medium" style={{ color: Colors.textSecondary }}>
-              Affordable
-            </Text>
-          </View>
+        {/* Tagline */}
+        <Text
+          className="text-center mt-3"
+          style={{
+            fontSize: 15,
+            color: Colors.sageLeaf,
+            letterSpacing: 1,
+          }}
+        >
+          Your Ride, Your Way
+        </Text>
+
+        {/* Loading dots */}
+        <View className="flex-row mt-10 gap-2">
+          <View
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ backgroundColor: Colors.botanicalGreen }}
+          />
+          <View
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ backgroundColor: Colors.softFern }}
+          />
+          <View
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ backgroundColor: Colors.sageLeaf }}
+          />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+
+      {/* Bottom branding */}
+      <View className="items-center">
+        <View className="h-px w-24 mb-4" style={{ backgroundColor: Colors.mossGreen + '40' }} />
+        <Text
+          className="text-center"
+          style={{
+            fontSize: 11,
+            color: Colors.oliveMist,
+            letterSpacing: 0.5,
+          }}
+        >
+          powered by
+        </Text>
+        <Text
+          className="text-center mt-1 font-bold"
+          style={{
+            fontSize: 14,
+            color: Colors.lindenGreen,
+            letterSpacing: 1.5,
+          }}
+        >
+          Haraya IT Solution
+        </Text>
+      </View>
+    </View>
   );
 }

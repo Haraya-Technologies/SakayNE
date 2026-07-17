@@ -33,7 +33,33 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.background }}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.deepForest }}>
+      {/* Decorative circles */}
+      <View className="absolute top-0 left-0 right-0" style={{ height: 250 }}>
+        <View
+          className="absolute rounded-full"
+          style={{
+            width: 150,
+            height: 150,
+            top: -40,
+            right: -30,
+            backgroundColor: Colors.pineShade,
+            opacity: 0.5,
+          }}
+        />
+        <View
+          className="absolute rounded-full"
+          style={{
+            width: 80,
+            height: 80,
+            top: 60,
+            left: -20,
+            backgroundColor: Colors.emeraldDepth,
+            opacity: 0.3,
+          }}
+        />
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -46,22 +72,28 @@ export default function LoginScreen() {
           <TouchableOpacity
             onPress={() => router.back()}
             className="w-10 h-10 rounded-full items-center justify-center mt-2 mb-4"
-            style={{ backgroundColor: Colors.backgroundAlt }}
+            style={{ backgroundColor: Colors.pineShade + '60' }}
           >
-            <Ionicons name="arrow-back" size={20} color={Colors.text} />
+            <Ionicons name="arrow-back" size={20} color={Colors.pistachioCream} />
           </TouchableOpacity>
 
           <View className="flex-1 justify-center py-8">
-            <View className="w-16 h-16 rounded-2xl items-center justify-center mb-6"
-              style={{ backgroundColor: Colors.primary + '12' }}
+            {/* Logo */}
+            <View
+              className="w-16 h-16 rounded-2xl items-center justify-center mb-6"
+              style={{
+                backgroundColor: Colors.botanicalGreen + '20',
+                borderWidth: 2,
+                borderColor: Colors.botanicalGreen + '40',
+              }}
             >
-              <Ionicons name="log-in" size={32} color={Colors.primary} />
+              <Ionicons name="log-in" size={32} color={Colors.botanicalGreen} />
             </View>
 
-            <Text className="text-3xl font-extrabold mb-1" style={{ color: Colors.text }}>
+            <Text className="text-3xl font-extrabold mb-1" style={{ color: Colors.pistachioCream }}>
               Welcome Back
             </Text>
-            <Text className="text-base mb-8" style={{ color: Colors.textSecondary }}>
+            <Text className="text-base mb-8" style={{ color: Colors.sageLeaf }}>
               Sign in to continue your ride
             </Text>
 
@@ -73,6 +105,7 @@ export default function LoginScreen() {
               keyboardType="email-address"
               icon="mail-outline"
               error={errors.email}
+              darkTheme
             />
 
             <Input
@@ -83,10 +116,11 @@ export default function LoginScreen() {
               secureTextEntry
               icon="lock-closed-outline"
               error={errors.password}
+              darkTheme
             />
 
             <TouchableOpacity className="self-end mb-6">
-              <Text className="text-sm font-semibold" style={{ color: Colors.primary }}>
+              <Text className="text-sm font-semibold" style={{ color: Colors.botanicalGreen }}>
                 Forgot Password?
               </Text>
             </TouchableOpacity>
@@ -100,29 +134,29 @@ export default function LoginScreen() {
             />
 
             <View className="flex-row items-center my-6">
-              <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
-              <Text className="mx-4 text-sm" style={{ color: Colors.textTertiary }}>
+              <View className="h-px flex-1" style={{ backgroundColor: Colors.mossGreen + '40' }} />
+              <Text className="mx-4 text-sm" style={{ color: Colors.oliveMist }}>
                 or continue with
               </Text>
-              <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
+              <View className="h-px flex-1" style={{ backgroundColor: Colors.mossGreen + '40' }} />
             </View>
 
             <View className="flex-row gap-3">
               <TouchableOpacity
                 className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
-                style={{ borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface }}
+                style={{ borderWidth: 1, borderColor: Colors.mossGreen + '40', backgroundColor: Colors.pineShade + '40' }}
               >
                 <Ionicons name="logo-google" size={20} color="#DB4437" />
-                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.text }}>
+                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.pistachioCream }}>
                   Google
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
-                style={{ borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface }}
+                style={{ borderWidth: 1, borderColor: Colors.mossGreen + '40', backgroundColor: Colors.pineShade + '40' }}
               >
                 <Ionicons name="logo-facebook" size={20} color="#1877F2" />
-                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.text }}>
+                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.pistachioCream }}>
                   Facebook
                 </Text>
               </TouchableOpacity>
@@ -130,14 +164,22 @@ export default function LoginScreen() {
           </View>
 
           <View className="flex-row justify-center items-center pb-6 pt-4">
-            <Text className="text-sm" style={{ color: Colors.textSecondary }}>
+            <Text className="text-sm" style={{ color: Colors.sageLeaf }}>
               Don&apos;t have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.replace('/(auth)/signup')}>
-              <Text className="text-sm font-bold" style={{ color: Colors.primary }}>
+              <Text className="text-sm font-bold" style={{ color: Colors.botanicalGreen }}>
                 Sign Up
               </Text>
             </TouchableOpacity>
+          </View>
+
+          {/* Footer */}
+          <View className="items-center pb-8">
+            <View className="h-px w-24 mb-4" style={{ backgroundColor: Colors.mossGreen + '40' }} />
+            <Text className="text-[10px]" style={{ color: Colors.oliveMist }}>
+              powered by Haraya IT Solution
+            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

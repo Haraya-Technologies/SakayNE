@@ -14,6 +14,7 @@ interface InputProps {
   error?: string;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   editable?: boolean;
+  darkTheme?: boolean;
 }
 
 export function Input({
@@ -27,14 +28,23 @@ export function Input({
   error,
   autoCapitalize = 'none',
   editable = true,
+  darkTheme = false,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
+  const bgColor = darkTheme ? Colors.pineShade + '60' : Colors.surface;
+  const textColor = darkTheme ? Colors.pistachioCream : Colors.text;
+  const placeholderColor = darkTheme ? Colors.oliveMist : Colors.textTertiary;
+  const borderColor = darkTheme ? Colors.mossGreen + '40' : Colors.border;
+  const borderColorFocused = darkTheme ? Colors.botanicalGreen : Colors.borderFocused;
+  const iconColor = darkTheme ? Colors.sageLeaf : Colors.textTertiary;
+  const iconColorFocused = darkTheme ? Colors.botanicalGreen : Colors.primary;
+
   return (
     <View className="w-full mb-4">
       {label && (
-        <Text className="text-sm font-semibold mb-1.5" style={{ color: Colors.text }}>
+        <Text className="text-sm font-semibold mb-1.5" style={{ color: textColor }}>
           {label}
         </Text>
       )}
@@ -42,8 +52,8 @@ export function Input({
         className="flex-row items-center rounded-xl px-4"
         style={{
           borderWidth: isFocused ? 2 : 1,
-          borderColor: error ? Colors.error : isFocused ? Colors.borderFocused : Colors.border,
-          backgroundColor: Colors.surface,
+          borderColor: error ? Colors.error : isFocused ? borderColorFocused : borderColor,
+          backgroundColor: bgColor,
           height: 52,
         }}
       >
@@ -51,15 +61,15 @@ export function Input({
           <Ionicons
             name={icon}
             size={20}
-            color={isFocused ? Colors.primary : Colors.textTertiary}
+            color={isFocused ? iconColorFocused : iconColor}
             style={{ marginRight: 12 }}
           />
         )}
         <TextInput
           className="flex-1 text-base"
-          style={{ color: Colors.text, padding: 0 }}
+          style={{ color: textColor, padding: 0 }}
           placeholder={placeholder}
-          placeholderTextColor={Colors.textTertiary}
+          placeholderTextColor={placeholderColor}
           value={value}
           onChangeText={onChangeText}
           keyboardType={keyboardType}
@@ -74,7 +84,7 @@ export function Input({
             <Ionicons
               name={isSecure ? 'eye-off-outline' : 'eye-outline'}
               size={20}
-              color={Colors.textTertiary}
+              color={iconColor}
             />
           </TouchableOpacity>
         )}
