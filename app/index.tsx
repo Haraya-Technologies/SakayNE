@@ -29,10 +29,10 @@ export default function WelcomeScreen() {
           </Text>
 
           <View className="flex-row justify-center mb-8">
-            <VehicleCard name="Jeepney" icon="bus" color={Colors.jeepneyGold} />
-            <VehicleCard name="Bus" icon="train" color={Colors.jeepneyBlue} />
-            <VehicleCard name="Motor" icon="bicycle" color={Colors.accent} />
-            <VehicleCard name="Tricycle" icon="car-sport" color={Colors.jeepneyRed} />
+            <VehicleCard name="Jeepney" icon="bus" color={Colors.botanicalGreen} />
+            <VehicleCard name="Bus" icon="train" color={Colors.softFern} />
+            <VehicleCard name="Motor" icon="bicycle" color={Colors.mossGreen} />
+            <VehicleCard name="Tricycle" icon="car-sport" color={Colors.sageLeaf} />
           </View>
 
           <View className="w-full space-y-3">
