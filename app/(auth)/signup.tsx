@@ -1,0 +1,195 @@
+import { useState } from 'react';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+
+export default function SignupScreen() {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+
+  const validate = () => {
+    const newErrors: Record<string, string | undefined> = {};
+    if (!fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Enter a valid email';
+    if (!phone.trim()) newErrors.phone = 'Phone number is required';
+    else if (phone.replace(/\D/g, '').length < 10) newErrors.phone = 'Enter a valid phone number';
+    if (!password) newErrors.password = 'Password is required';
+    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSignup = () => {
+    if (!validate()) return;
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      // TODO: Replace with actual auth logic
+    }, 1500);
+  };
+
+  const clearError = (field: string) => {
+    setErrors((e) => ({ ...e, [field]: undefined }));
+  };
+
+  return (
+    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.background }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+      >
+        <ScrollView
+          contentContainerClassName="flex-grow px-6"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="w-10 h-10 rounded-full items-center justify-center mt-2 mb-4"
+            style={{ backgroundColor: Colors.backgroundAlt }}
+          >
+            <Ionicons name="arrow-back" size={20} color={Colors.text} />
+          </TouchableOpacity>
+
+          <View className="py-4">
+            <View className="w-16 h-16 rounded-2xl items-center justify-center mb-6"
+              style={{ backgroundColor: Colors.primary + '12' }}
+            >
+              <Ionicons name="person-add" size={32} color={Colors.primary} />
+            </View>
+
+            <Text className="text-3xl font-extrabold mb-1" style={{ color: Colors.text }}>
+              Create Account
+            </Text>
+            <Text className="text-base mb-8" style={{ color: Colors.textSecondary }}>
+              Join SAKAY and start riding today
+            </Text>
+
+            <Input
+              label="Full Name"
+              placeholder="Juan Dela Cruz"
+              value={fullName}
+              onChangeText={(text) => { setFullName(text); clearError('fullName'); }}
+              icon="person-outline"
+              error={errors.fullName}
+              autoCapitalize="words"
+            />
+
+            <Input
+              label="Email"
+              placeholder="juan@email.com"
+              value={email}
+              onChangeText={(text) => { setEmail(text); clearError('email'); }}
+              keyboardType="email-address"
+              icon="mail-outline"
+              error={errors.email}
+            />
+
+            <Input
+              label="Phone Number"
+              placeholder="+63 9XX XXX XXXX"
+              value={phone}
+              onChangeText={(text) => { setPhone(text); clearError('phone'); }}
+              keyboardType="phone-pad"
+              icon="phone-portrait-outline"
+              error={errors.phone}
+            />
+
+            <Input
+              label="Password"
+              placeholder="Create a password"
+              value={password}
+              onChangeText={(text) => { setPassword(text); clearError('password'); }}
+              secureTextEntry
+              icon="lock-closed-outline"
+              error={errors.password}
+            />
+
+            <Input
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChangeText={(text) => { setConfirmPassword(text); clearError('confirmPassword'); }}
+              secureTextEntry
+              icon="lock-closed-outline"
+              error={errors.confirmPassword}
+            />
+
+            <View className="flex-row items-start mt-2 mb-6">
+              <View className="w-5 h-5 rounded border-2 items-center justify-center mt-0.5 mr-2"
+                style={{ borderColor: Colors.primary, backgroundColor: Colors.primary }}
+              >
+                <Ionicons name="checkmark" size={12} color="#fff" />
+              </View>
+              <Text className="flex-1 text-sm leading-5" style={{ color: Colors.textSecondary }}>
+                I agree to the{' '}
+                <Text style={{ color: Colors.primary }} className="font-semibold">Terms of Service</Text>
+                {' '}and{' '}
+                <Text style={{ color: Colors.primary }} className="font-semibold">Privacy Policy</Text>
+              </Text>
+            </View>
+
+            <Button
+              title="Create Account"
+              onPress={handleSignup}
+              variant="primary"
+              size="lg"
+              loading={loading}
+            />
+
+            <View className="flex-row items-center my-6">
+              <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
+              <Text className="mx-4 text-sm" style={{ color: Colors.textTertiary }}>
+                or sign up with
+              </Text>
+              <View className="h-px flex-1" style={{ backgroundColor: Colors.border }} />
+            </View>
+
+            <View className="flex-row gap-3">
+              <TouchableOpacity
+                className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
+                style={{ borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface }}
+              >
+                <Ionicons name="logo-google" size={20} color="#DB4437" />
+                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.text }}>
+                  Google
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
+                style={{ borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.surface }}
+              >
+                <Ionicons name="logo-facebook" size={20} color="#1877F2" />
+                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.text }}>
+                  Facebook
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="flex-row justify-center items-center pb-6 pt-4">
+            <Text className="text-sm" style={{ color: Colors.textSecondary }}>
+              Already have an account?{' '}
+            </Text>
+            <TouchableOpacity onPress={() => router.replace('/(auth)/login')}>
+              <Text className="text-sm font-bold" style={{ color: Colors.primary }}>
+                Sign In
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
