@@ -131,7 +131,7 @@ export default function LoginScreen() {
 
           <View className="flex-row justify-center items-center pb-6 pt-4">
             <Text className="text-sm" style={{ color: Colors.textSecondary }}>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.replace('/(auth)/signup')}>
               <Text className="text-sm font-bold" style={{ color: Colors.primary }}>

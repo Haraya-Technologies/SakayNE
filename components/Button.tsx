@@ -78,10 +78,13 @@ export function Button({
         onPress={onPress}
         disabled={disabled || loading}
         activeOpacity={0.7}
-        style={fullWidth ? { width: '100%' } : undefined}
-        className={`border-2 rounded-xl ${sizeClasses[size]} items-center justify-center flex-row`}
-        // @ts-expect-error borderColor not in className
-        style={{ borderColor: Colors.primary, borderWidth: 2, opacity: disabled ? 0.5 : 1 }}
+        className={`rounded-xl ${sizeClasses[size]} items-center justify-center flex-row`}
+        style={{
+          width: fullWidth ? '100%' : undefined,
+          borderColor: Colors.primary,
+          borderWidth: 2,
+          opacity: disabled ? 0.5 : 1,
+        }}
       >
         {loading ? (
           <ActivityIndicator color={Colors.primary} size="small" />
