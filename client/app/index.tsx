@@ -1,10 +1,7 @@
 import '@/global.css';
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
-
-const LOGO_SRC = require('@/assets/logo/SakayNE.png');
+import { Image, Text, View } from 'react-native';
 
 export default function PreLoader() {
   useEffect(() => {
@@ -15,14 +12,14 @@ export default function PreLoader() {
   }, []);
 
   return (
-    <View className="flex-1 items-center justify-between bg-white py-20">
+    <View className="flex-1 items-center justify-between bg-white pb-12">
       <View />
 
       <View className="items-center">
         <Image
-          source={LOGO_SRC}
-          className="w-32 h-32"
-          contentFit="contain"
+          source={require('../assets/logo/SakayNE.png')}
+          className="w-36 h-36"
+          resizeMode="contain"
         />
       </View>
 

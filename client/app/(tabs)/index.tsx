@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/src/constants/Colors';
-import { getCurrentUser, logout } from '@/src/services/auth';
+import { getCurrentUser, logout } from '@/src/auth/auth.service';
 import { User } from '@/src/types';
 import { router } from 'expo-router';
 

@@ -1,7 +1,7 @@
-import { saveAuth, clearAuth, getAuth } from '@/src/store/auth';
+import { saveAuth, clearAuth, getAuth } from './auth.store';
 import { User } from '@/src/types';
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
 
 export async function signup(
   fullName: string,

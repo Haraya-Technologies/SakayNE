@@ -1,15 +1,10 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/src/constants/Colors';
-import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
-import { signup } from '@/src/services/auth';
-
-const LOGO_SRC = require('@/assets/logo/SakayNE.png');
+import { signup } from '@/src/auth/auth.service';
 
 export default function SignupScreen() {
   const [fullName, setFullName] = useState('');
@@ -29,7 +24,7 @@ export default function SignupScreen() {
     if (!phone.trim()) newErrors.phone = 'Phone number is required';
     else if (phone.replace(/\D/g, '').length < 10) newErrors.phone = 'Enter a valid phone number';
     if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    else if (password.length < 6) newErrors.password = 'At least 6 characters';
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (!agreedToTerms) newErrors.terms = 'You must agree to the Terms of Service';
     setErrors(newErrors);
@@ -54,37 +49,32 @@ export default function SignupScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        style={{ flex: 1 }}
       >
         <ScrollView
-          contentContainerClassName="flex-grow px-6"
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center mt-2"
+            style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center', marginTop: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color={Colors.textSecondary} />
+            <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F5F7F5', justifyContent: 'center', alignItems: 'center' }}>
+              <Ionicons name="arrow-back" size={22} color="#0D1F16" />
+            </View>
           </TouchableOpacity>
 
-          <View className="flex-1 justify-center pb-8">
-            <View className="items-center mb-10">
-              <Image
-                source={LOGO_SRC}
-                className="w-32 h-32 mb-4"
-                contentFit="contain"
-              />
-              <Text className="text-2xl font-extrabold text-gray-900">
-                Create Account
-              </Text>
-              <Text className="text-sm text-gray-400 mt-1">
-                Join SakayNE and start riding today
-              </Text>
-            </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={{ fontSize: 28, fontWeight: '800', textAlign: 'center', color: '#0D1F16', marginBottom: 6 }}>
+              Create Account
+            </Text>
+            <Text style={{ fontSize: 15, textAlign: 'center', color: '#8FA092', marginBottom: 32, lineHeight: 22 }}>
+              Join SakayNE and start riding today
+            </Text>
 
             <Input
               label="Full Name"
@@ -137,54 +127,57 @@ export default function SignupScreen() {
             />
 
             <TouchableOpacity
-              className="flex-row items-start mt-2 mb-6"
+              style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: 4, marginBottom: 24 }}
               onPress={() => { setAgreedToTerms(!agreedToTerms); setErrors((e) => ({ ...e, terms: undefined })); }}
               activeOpacity={0.7}
             >
-              <View
-                className="w-5 h-5 rounded items-center justify-center mt-0.5 mr-2"
-                style={{
-                  backgroundColor: agreedToTerms ? Colors.primary : '#E5E7EB',
-                  borderWidth: agreedToTerms ? 0 : 1,
-                  borderColor: '#D1D5DB',
-                }}
-              >
-                {agreedToTerms && (
-                  <Ionicons name="checkmark" size={12} color="#fff" />
-                )}
+              <View style={{
+                width: 20, height: 20, borderRadius: 6, marginTop: 2, marginRight: 10,
+                justifyContent: 'center', alignItems: 'center',
+                backgroundColor: agreedToTerms ? '#3F8451' : '#F5F7F5',
+                borderWidth: agreedToTerms ? 0 : 1, borderColor: '#D6E4D8',
+              }}>
+                {agreedToTerms && <Ionicons name="checkmark" size={14} color="#fff" />}
               </View>
-              <Text className="flex-1 text-sm leading-5 text-gray-500">
+              <Text style={{ flex: 1, fontSize: 13, lineHeight: 20, color: '#8FA092' }}>
                 I agree to the{' '}
-                <Text style={{ color: Colors.primary }} className="font-semibold">
-                  Terms of Service
-                </Text>
+                <Text style={{ color: '#3F8451', fontWeight: '600' }}>Terms of Service</Text>
                 {' '}and{' '}
-                <Text style={{ color: Colors.primary }} className="font-semibold">
-                  Privacy Policy
-                </Text>
+                <Text style={{ color: '#3F8451', fontWeight: '600' }}>Privacy Policy</Text>
               </Text>
             </TouchableOpacity>
             {errors.terms && (
-              <Text className="text-xs -mt-4 mb-4 ml-1" style={{ color: Colors.error }}>
+              <Text style={{ fontSize: 12, color: '#C0392B', marginTop: -16, marginBottom: 16, marginLeft: 4 }}>
                 {errors.terms}
               </Text>
             )}
 
-            <Button
-              title="Create Account"
+            <TouchableOpacity
               onPress={handleSignup}
-              variant="primary"
-              size="lg"
-              loading={loading}
-            />
+              disabled={loading}
+              activeOpacity={0.85}
+              style={{
+                width: '100%', height: 54, borderRadius: 16,
+                justifyContent: 'center', alignItems: 'center',
+                backgroundColor: '#3F8451', opacity: loading ? 0.7 : 1,
+              }}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={{ fontSize: 16, fontWeight: '700', color: '#fff' }}>
+                  Create Account
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
 
-          <View className="flex-row justify-center items-center pb-6">
-            <Text className="text-sm text-gray-400">
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 24 }}>
+            <Text style={{ fontSize: 14, color: '#8FA092' }}>
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.replace('/(auth)/login')}>
-              <Text className="text-sm font-bold" style={{ color: Colors.primary }}>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: '#3F8451' }}>
                 Sign In
               </Text>
             </TouchableOpacity>

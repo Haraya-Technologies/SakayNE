@@ -1,50 +1,57 @@
-import { Button } from '@/src/components/ui/Button';
-import '@/global.css';
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-const LOGO_SRC = require('@/assets/logo/SakayNE.png');
 
 export default function WelcomeScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 items-center justify-between px-6 py-12">
-        <View />
-
-        <View className="items-center">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 3, backgroundColor: '#fff' }}>
           <Image
-            source={LOGO_SRC}
-            className="w-52 h-52"
-            contentFit="contain"
+            source={require('../assets/background/get_started.png')}
+            style={{ flex: 1, width: '100%' }}
+            resizeMode="cover"
+          />
+          <Image
+            source={require('../assets/logo/SakayNE.png')}
+            style={{ position: 'absolute', top: 40, alignSelf: 'center', width: 180, height: 180 }}
+            resizeMode="contain"
           />
         </View>
 
-        <View className="w-full">
-          <Button
-            title="Get Started"
-            onPress={() => router.push('/(auth)/signup')}
-            variant="primary"
-            size="lg"
-          />
-          <View className="mt-4">
-            <Button
-              title="I already have an account"
-              onPress={() => router.push('/(auth)/login')}
-              variant="outline"
-              size="lg"
-            />
+        <View style={{ flex: 1, marginTop: -24 }}>
+          <View style={{ flex: 1, backgroundColor: '#fff', borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 28, paddingTop: 32, paddingBottom: 16 }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <Text style={{ fontSize: 24, fontWeight: '800', color: '#1A1A2E', textAlign: 'center', lineHeight: 32 }}>
+                Let's Get Started{'\n'}to Continue
+              </Text>
+              <Text style={{ fontSize: 14, color: '#8E8EA0', textAlign: 'center', marginTop: 12, lineHeight: 20, paddingHorizontal: 4 }}>
+                To continue, you need to create an account. Select a login method below.
+              </Text>
+            </View>
+
+            <View style={{ paddingBottom: 8 }}>
+              <TouchableOpacity
+                onPress={() => router.push('/(auth)/signup')}
+                activeOpacity={0.85}
+                style={{
+                  width: '100%', height: 54, borderRadius: 16,
+                  justifyContent: 'center', alignItems: 'center',
+                  backgroundColor: '#3F8451',
+                }}
+              >
+                <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF', letterSpacing: 0.3 }}>
+                  Get Started
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => router.push('/(auth)/login')} style={{ alignItems: 'center', marginTop: 20 }}>
+                <Text style={{ fontSize: 14, color: '#8E8EA0' }}>
+                  I already have an account
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-
-        <View className="items-center">
-          <Text className="text-xs text-gray-400">
-            powered by
-          </Text>
-          <Text className="text-sm font-bold text-gray-500 mt-0.5 tracking-wide">
-            Haraya IT Solution
-          </Text>
         </View>
       </View>
     </SafeAreaView>

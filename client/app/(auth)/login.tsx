@@ -2,14 +2,9 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/src/constants/Colors';
-import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
-import { login } from '@/src/services/auth';
-
-const LOGO_SRC = require('@/assets/logo/SakayNE.png');
+import { login } from '@/src/auth/auth.service';
 
 function isEmail(value: string) {
   return /\S+@\S+\.\S+/.test(value);
@@ -52,41 +47,36 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        style={{ flex: 1 }}
       >
         <ScrollView
-          contentContainerClassName="flex-grow px-6"
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center mt-2"
+            style={{ width: 44, height: 44, justifyContent: 'center', alignItems: 'center', marginTop: 8 }}
           >
-            <Ionicons name="arrow-back" size={24} color={Colors.textSecondary} />
+            <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F5F7F5', justifyContent: 'center', alignItems: 'center' }}>
+              <Ionicons name="arrow-back" size={22} color="#0D1F16" />
+            </View>
           </TouchableOpacity>
 
-          <View className="flex-1 justify-center pb-8">
-            <View className="items-center mb-10">
-              <Image
-                source={LOGO_SRC}
-                className="w-32 h-32 mb-4"
-                contentFit="contain"
-              />
-              <Text className="text-2xl font-extrabold text-gray-900">
-                Welcome Back
-              </Text>
-              <Text className="text-sm text-gray-400 mt-1">
-                Sign in to continue your ride
-              </Text>
-            </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={{ fontSize: 28, fontWeight: '800', textAlign: 'center', color: '#0D1F16', marginBottom: 6 }}>
+              Welcome Back
+            </Text>
+            <Text style={{ fontSize: 15, textAlign: 'center', color: '#8FA092', marginBottom: 40, lineHeight: 22 }}>
+              Sign in to continue your ride
+            </Text>
 
             <Input
               label="Email or Phone Number"
-              placeholder="Enter your email or phone number"
+              placeholder="Enter your email or phone"
               value={identifier}
               onChangeText={(text) => { setIdentifier(text); setErrors((e) => ({ ...e, identifier: undefined })); }}
               keyboardType="default"
@@ -104,53 +94,34 @@ export default function LoginScreen() {
               error={errors.password}
             />
 
-            <TouchableOpacity className="self-end mb-6">
-              <Text className="text-sm font-semibold" style={{ color: Colors.primary }}>
+            <TouchableOpacity style={{ alignSelf: 'flex-end', marginBottom: 32 }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: '#3F8451' }}>
                 Forgot Password?
               </Text>
             </TouchableOpacity>
 
-            <Button
-              title="Sign In"
+            <TouchableOpacity
               onPress={handleLogin}
-              variant="primary"
-              size="lg"
-              loading={loading}
-            />
-
-            <View className="flex-row items-center my-6">
-              <View className="h-px flex-1 bg-gray-200" />
-              <Text className="mx-4 text-sm text-gray-400">or</Text>
-              <View className="h-px flex-1 bg-gray-200" />
-            </View>
-
-            <TouchableOpacity
-              className="flex-row items-center justify-center py-3.5 rounded-xl mb-3"
-              style={{ borderWidth: 1, borderColor: '#E5E7EB' }}
+              disabled={loading}
+              activeOpacity={0.85}
+              style={{
+                width: '100%', height: 54, borderRadius: 16,
+                justifyContent: 'center', alignItems: 'center',
+                backgroundColor: '#3F8451', opacity: loading ? 0.7 : 1,
+              }}
             >
-              <Ionicons name="logo-google" size={20} color="#4285F4" />
-              <Text className="ml-2 text-sm font-semibold text-gray-700">
-                Continue with Google
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="flex-row items-center justify-center py-3.5 rounded-xl"
-              style={{ borderWidth: 1, borderColor: '#E5E7EB' }}
-            >
-              <Ionicons name="logo-apple" size={20} color="#000" />
-              <Text className="ml-2 text-sm font-semibold text-gray-700">
-                Continue with Apple
+              <Text style={{ fontSize: 16, fontWeight: '700', color: '#fff' }}>
+                {loading ? 'Signing in...' : 'Sign In'}
               </Text>
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row justify-center items-center pb-6">
-            <Text className="text-sm text-gray-400">
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 24 }}>
+            <Text style={{ fontSize: 14, color: '#8FA092' }}>
               Don&apos;t have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.replace('/(auth)/signup')}>
-              <Text className="text-sm font-bold" style={{ color: Colors.primary }}>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: '#3F8451' }}>
                 Sign Up
               </Text>
             </TouchableOpacity>
