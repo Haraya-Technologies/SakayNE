@@ -36,7 +36,7 @@ export default function SignupScreen() {
     setLoading(true);
     try {
       await signup(fullName, email, phone, password);
-      router.replace('/(tabs)');
+      router.push({ pathname: '/(auth)/verify-otp', params: { email } });
     } catch (err: any) {
       setErrors({ email: err.message || 'Signup failed' });
     } finally {

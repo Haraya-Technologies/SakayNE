@@ -3,23 +3,25 @@ import { User } from '@/src/types';
 
 const API_BASE = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
 
-export async function signup(
-  fullName: string,
-  email: string,
-  phone: string,
-  password: string,
-  role: 'passenger' | 'driver' = 'passenger',
-) {
+export async function signup(fullName: string, email: string, phone: string, password: string, role: 'passenger' | 'driver' = 'passenger') {
   const res = await fetch(`${API_BASE}/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ fullName, email, phone, password, role }),
   });
-
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Signup failed');
+  return data;
+}
 
-  await saveAuth(data.user, data.token);
+export async function verifyEmail(email: string, otp: string) {
+  const res = await fetch(`${API_BASE}/auth/verify-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, otp }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Verification failed');
   return data;
 }
 
@@ -29,10 +31,8 @@ export async function login(identifier: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identifier, password }),
   });
-
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Login failed');
-
   await saveAuth(data.user, data.token);
   return data;
 }
@@ -57,10 +57,7 @@ export async function getUserProfile(userId: string) {
 export async function updateUserProfile(userId: string, updates: Partial<User>) {
   await fetch(`${API_BASE}/users/profile`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'user-id': userId,
-    },
+    headers: { 'Content-Type': 'application/json', 'user-id': userId },
     body: JSON.stringify(updates),
   });
 }

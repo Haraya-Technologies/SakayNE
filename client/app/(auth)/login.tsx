@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -110,9 +110,13 @@ export default function LoginScreen() {
                 backgroundColor: '#3F8451', opacity: loading ? 0.7 : 1,
               }}
             >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: '#fff' }}>
-                {loading ? 'Signing in...' : 'Sign In'}
-              </Text>
+              {loading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={{ fontSize: 16, fontWeight: '700', color: '#fff' }}>
+                  Sign In
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
 
