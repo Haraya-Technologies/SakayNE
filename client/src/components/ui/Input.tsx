@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextInput, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/src/constants/Colors';
 
 interface InputProps {
   label?: string;
@@ -33,11 +33,8 @@ export function Input({
   const [isFocused, setIsFocused] = useState(false);
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
-  const bgColor = darkTheme ? Colors.pineShade + '60' : Colors.surface;
   const textColor = darkTheme ? Colors.pistachioCream : Colors.text;
   const placeholderColor = darkTheme ? Colors.oliveMist : Colors.textTertiary;
-  const borderColor = darkTheme ? Colors.mossGreen + '40' : Colors.border;
-  const borderColorFocused = darkTheme ? Colors.botanicalGreen : Colors.borderFocused;
   const iconColor = darkTheme ? Colors.sageLeaf : Colors.textTertiary;
   const iconColorFocused = darkTheme ? Colors.botanicalGreen : Colors.primary;
 
@@ -49,11 +46,9 @@ export function Input({
         </Text>
       )}
       <View
-        className="flex-row items-center rounded-xl px-4"
+        className="flex-row items-center rounded-xl px-4 bg-gray-50"
         style={{
-          borderWidth: isFocused ? 2 : 1,
-          borderColor: error ? Colors.error : isFocused ? borderColorFocused : borderColor,
-          backgroundColor: bgColor,
+          borderWidth: 0,
           height: 52,
         }}
       >
@@ -66,8 +61,8 @@ export function Input({
           />
         )}
         <TextInput
-          className="flex-1 text-base"
-          style={{ color: textColor, padding: 0 }}
+          className="flex-1 text-base bg-transparent"
+          style={{ color: textColor, padding: 0, borderWidth: 0 }}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           value={value}
@@ -76,6 +71,7 @@ export function Input({
           secureTextEntry={isSecure}
           autoCapitalize={autoCapitalize}
           editable={editable}
+          underlineColorAndroid="transparent"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />

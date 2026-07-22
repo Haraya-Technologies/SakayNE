@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/src/constants/Colors';
 
 interface ButtonProps {
   title: string;

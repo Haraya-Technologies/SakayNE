@@ -2,10 +2,14 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/Colors';
-import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
+import { Colors } from '@/src/constants/Colors';
+import { Button } from '@/src/components/ui/Button';
+import { Input } from '@/src/components/ui/Input';
+import { signup } from '@/src/services/auth';
+
+const LOGO_SRC = require('@/assets/logo/SakayNE.png');
 
 export default function SignupScreen() {
   const [fullName, setFullName] = useState('');
@@ -13,6 +17,7 @@ export default function SignupScreen() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
 
@@ -26,17 +31,22 @@ export default function SignupScreen() {
     if (!password) newErrors.password = 'Password is required';
     else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!agreedToTerms) newErrors.terms = 'You must agree to the Terms of Service';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!validate()) return;
     setLoading(true);
-    setTimeout(() => {
+    try {
+      await signup(fullName, email, phone, password);
+      router.replace('/(tabs)');
+    } catch (err: any) {
+      setErrors({ email: err.message || 'Signup failed' });
+    } finally {
       setLoading(false);
-      // TODO: Replace with actual auth logic
-    }, 1500);
+    }
   };
 
   const clearError = (field: string) => {
@@ -44,33 +54,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.deepForest }}>
-      {/* Decorative circles */}
-      <View className="absolute top-0 left-0 right-0" style={{ height: 250 }}>
-        <View
-          className="absolute rounded-full"
-          style={{
-            width: 150,
-            height: 150,
-            top: -40,
-            right: -30,
-            backgroundColor: Colors.pineShade,
-            opacity: 0.5,
-          }}
-        />
-        <View
-          className="absolute rounded-full"
-          style={{
-            width: 80,
-            height: 80,
-            top: 60,
-            left: -20,
-            backgroundColor: Colors.emeraldDepth,
-            opacity: 0.3,
-          }}
-        />
-      </View>
-
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -82,31 +66,25 @@ export default function SignupScreen() {
         >
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 rounded-full items-center justify-center mt-2 mb-4"
-            style={{ backgroundColor: Colors.pineShade + '60' }}
+            className="w-10 h-10 items-center justify-center mt-2"
           >
-            <Ionicons name="arrow-back" size={20} color={Colors.pistachioCream} />
+            <Ionicons name="arrow-back" size={24} color={Colors.textSecondary} />
           </TouchableOpacity>
 
-          <View className="py-4">
-            {/* Logo */}
-            <View
-              className="w-16 h-16 rounded-2xl items-center justify-center mb-6"
-              style={{
-                backgroundColor: Colors.botanicalGreen + '20',
-                borderWidth: 2,
-                borderColor: Colors.botanicalGreen + '40',
-              }}
-            >
-              <Ionicons name="person-add" size={32} color={Colors.botanicalGreen} />
+          <View className="flex-1 justify-center pb-8">
+            <View className="items-center mb-10">
+              <Image
+                source={LOGO_SRC}
+                className="w-32 h-32 mb-4"
+                contentFit="contain"
+              />
+              <Text className="text-2xl font-extrabold text-gray-900">
+                Create Account
+              </Text>
+              <Text className="text-sm text-gray-400 mt-1">
+                Join SakayNE and start riding today
+              </Text>
             </View>
-
-            <Text className="text-3xl font-extrabold mb-1" style={{ color: Colors.pistachioCream }}>
-              Create Account
-            </Text>
-            <Text className="text-base mb-8" style={{ color: Colors.sageLeaf }}>
-              Join SakayNE and start riding today
-            </Text>
 
             <Input
               label="Full Name"
@@ -116,7 +94,6 @@ export default function SignupScreen() {
               icon="person-outline"
               error={errors.fullName}
               autoCapitalize="words"
-              darkTheme
             />
 
             <Input
@@ -127,7 +104,6 @@ export default function SignupScreen() {
               keyboardType="email-address"
               icon="mail-outline"
               error={errors.email}
-              darkTheme
             />
 
             <Input
@@ -138,7 +114,6 @@ export default function SignupScreen() {
               keyboardType="phone-pad"
               icon="phone-portrait-outline"
               error={errors.phone}
-              darkTheme
             />
 
             <Input
@@ -149,7 +124,6 @@ export default function SignupScreen() {
               secureTextEntry
               icon="lock-closed-outline"
               error={errors.password}
-              darkTheme
             />
 
             <Input
@@ -160,27 +134,41 @@ export default function SignupScreen() {
               secureTextEntry
               icon="lock-closed-outline"
               error={errors.confirmPassword}
-              darkTheme
             />
 
-            <View className="flex-row items-start mt-2 mb-6">
+            <TouchableOpacity
+              className="flex-row items-start mt-2 mb-6"
+              onPress={() => { setAgreedToTerms(!agreedToTerms); setErrors((e) => ({ ...e, terms: undefined })); }}
+              activeOpacity={0.7}
+            >
               <View
                 className="w-5 h-5 rounded items-center justify-center mt-0.5 mr-2"
-                style={{ backgroundColor: Colors.botanicalGreen }}
+                style={{
+                  backgroundColor: agreedToTerms ? Colors.primary : '#E5E7EB',
+                  borderWidth: agreedToTerms ? 0 : 1,
+                  borderColor: '#D1D5DB',
+                }}
               >
-                <Ionicons name="checkmark" size={12} color="#fff" />
+                {agreedToTerms && (
+                  <Ionicons name="checkmark" size={12} color="#fff" />
+                )}
               </View>
-              <Text className="flex-1 text-sm leading-5" style={{ color: Colors.sageLeaf }}>
+              <Text className="flex-1 text-sm leading-5 text-gray-500">
                 I agree to the{' '}
-                <Text style={{ color: Colors.botanicalGreen }} className="font-semibold">
+                <Text style={{ color: Colors.primary }} className="font-semibold">
                   Terms of Service
                 </Text>
                 {' '}and{' '}
-                <Text style={{ color: Colors.botanicalGreen }} className="font-semibold">
+                <Text style={{ color: Colors.primary }} className="font-semibold">
                   Privacy Policy
                 </Text>
               </Text>
-            </View>
+            </TouchableOpacity>
+            {errors.terms && (
+              <Text className="text-xs -mt-4 mb-4 ml-1" style={{ color: Colors.error }}>
+                {errors.terms}
+              </Text>
+            )}
 
             <Button
               title="Create Account"
@@ -189,54 +177,17 @@ export default function SignupScreen() {
               size="lg"
               loading={loading}
             />
-
-            <View className="flex-row items-center my-6">
-              <View className="h-px flex-1" style={{ backgroundColor: Colors.mossGreen + '40' }} />
-              <Text className="mx-4 text-sm" style={{ color: Colors.oliveMist }}>
-                or sign up with
-              </Text>
-              <View className="h-px flex-1" style={{ backgroundColor: Colors.mossGreen + '40' }} />
-            </View>
-
-            <View className="flex-row gap-3">
-              <TouchableOpacity
-                className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
-                style={{ borderWidth: 1, borderColor: Colors.mossGreen + '40', backgroundColor: Colors.pineShade + '40' }}
-              >
-                <Ionicons name="logo-google" size={20} color="#DB4437" />
-                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.pistachioCream }}>
-                  Google
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex-1 flex-row items-center justify-center py-3 rounded-xl"
-                style={{ borderWidth: 1, borderColor: Colors.mossGreen + '40', backgroundColor: Colors.pineShade + '40' }}
-              >
-                <Ionicons name="logo-facebook" size={20} color="#1877F2" />
-                <Text className="ml-2 text-sm font-semibold" style={{ color: Colors.pistachioCream }}>
-                  Facebook
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
 
-          <View className="flex-row justify-center items-center pb-6 pt-4">
-            <Text className="text-sm" style={{ color: Colors.sageLeaf }}>
+          <View className="flex-row justify-center items-center pb-6">
+            <Text className="text-sm text-gray-400">
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.replace('/(auth)/login')}>
-              <Text className="text-sm font-bold" style={{ color: Colors.botanicalGreen }}>
+              <Text className="text-sm font-bold" style={{ color: Colors.primary }}>
                 Sign In
               </Text>
             </TouchableOpacity>
-          </View>
-
-          {/* Footer */}
-          <View className="items-center pb-8">
-            <View className="h-px w-24 mb-4" style={{ backgroundColor: Colors.mossGreen + '40' }} />
-            <Text className="text-[10px]" style={{ color: Colors.oliveMist }}>
-              powered by Haraya IT Solution
-            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

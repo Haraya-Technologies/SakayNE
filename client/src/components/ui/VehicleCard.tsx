@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/Colors';
+import { Colors } from '@/src/constants/Colors';
 
 interface VehicleCardProps {
   name: string;
